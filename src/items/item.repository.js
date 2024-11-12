@@ -8,22 +8,6 @@ const findAllItems = async () => {
    
 };
 
-// const getItemById = async (req, res) => {
-//    try {
-//       const { itemId } = req.params;
-//       const item = await prisma.item.findUnique({
-//          where: { id: parseInt(itemId) },
-//       });
-//       if (!item) {
-//          return res.status(404).json({ message: 'Item not found' });
-//       }
-//       res.json(item);
-//    } catch (error) {
-//       console.error(error);
-//       res.status(500).json({ message: 'Internal server error' });
-//    }
-// };
-
 const insertItem = async (newItemData) => {
 
       const itemData = await prisma.item.create({
@@ -38,10 +22,68 @@ const insertItem = async (newItemData) => {
          },
       });
       return itemData
-   
 };
+
+// repositories/itemRepository.js
+
+// Mendapatkan semua item dengan stok rendah
+const getLowStockItems = async () => {
+   return prisma.item.findMany({
+      where: { quantity: { lt: 5 } },
+   });
+};
+
+// Mendapatkan semua item berdasarkan kategori
+const getItemsByCategory = async (categoryId) => {
+   return prisma.item.findMany({
+      where: { categoryId: parseInt(categoryId) },
+   });
+};
+
+// Mendapatkan ringkasan per kategori
+const getCategorySummary = async () => {
+   return prisma.item.groupBy({
+      by: ['categoryId'],
+      _sum: { price: true, quantity: true },
+      _avg: { price: true },
+      _count: { id: true },
+   });
+};
+
+// Mendapatkan ringkasan per pemasok
+const getSupplierSummary = async () => {
+   return prisma.item.groupBy({
+      by: ['supplierId'],
+      _sum: { price: true, quantity: true },
+      _avg: { price: true },
+      _count: { id: true },
+   });
+};
+
+// Mendapatkan ringkasan keseluruhan sistem
+const getSystemSummary = async () => {
+   const totalItems = await prisma.item.count();
+   const totalCategories = await prisma.category.count();
+   const totalSuppliers = await prisma.supplier.count();
+   const totalStockValue = await prisma.item.aggregate({
+      _sum: { price: true },
+   });
+
+   return {
+      totalItems,
+      totalCategories,
+      totalSuppliers,
+      totalStockValue: totalStockValue._sum.price,
+   };
+};
+
 
 module.exports = {
    findAllItems,
    insertItem,
+   getLowStockItems,
+   getItemsByCategory,
+   getCategorySummary,
+   getSupplierSummary,
+   getSystemSummary,
 };

@@ -26,18 +26,29 @@ const findAllCategories = async () => {
 
 const insertCategories = async (newCategoriesData) => {
 
-      const CategoriesData = await prisma.category.create({
+      const categoriesData = await prisma.category.create({
          data: {
             name: newCategoriesData.name,
             description: newCategoriesData.description,
             createdBy: newCategoriesData.createdBy
          },
       });
-      return CategoriesData
+      return categoriesData
    
+};
+
+const findCategoriesById = async (id) => {
+
+      const categories = await prisma.category.findUnique({
+         where: { id: parseInt(id) },
+      });
+     
+      return categories;
+  
 };
 
 module.exports = {
    findAllCategories,
    insertCategories,
+   findCategoriesById
 };

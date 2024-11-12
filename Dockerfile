@@ -4,17 +4,21 @@ FROM node:16-alpine
 # Install nodemon globally
 RUN npm install -g nodemon
 
-# Create app directory
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package.json ./
+# Copy package.json and package-lock.json, then install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy the entire project
+# Copy Prisma schema and the rest of the project
+COPY prisma ./prisma/
 COPY . .
 
-# Expose port 3000 for the app
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Expose the application port
 EXPOSE 3000
 
 # Start the app with nodemon

@@ -1,6 +1,6 @@
 const express = require('express');
 const prisma = require('../db');
-const { createCategories, getAllCategories } = require('../categories/categories.services');
+const { createCategories, getAllCategories, getCategoriesById } = require('../categories/categories.services');
 
 const router = express.Router()
 
@@ -28,6 +28,17 @@ router.post('/categories', async (req, res) => {
 router.get('/categories', async (req, res) => {
    try {
       const categories = await getAllCategories();
+      res.status(200).send(categories);
+   } catch (error) {
+      res.status(500).json({ error: error.message });
+   }
+});
+
+router.get('/category/:id', async (req, res) => {
+   const { id } = req.params;
+   console.log(id)
+   try {
+      const categories = await getCategoriesById(id);
       res.status(200).send(categories);
    } catch (error) {
       res.status(500).json({ error: error.message });
