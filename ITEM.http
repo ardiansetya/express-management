@@ -1,0 +1,25 @@
+### Get all items
+GET http://localhost:3001/api/items
+Accept: application/json
+
+### Create a new item
+POST http://localhost:3001/api/items
+Content-Type: application/json
+
+{
+  "name": "Item Baru2",
+  "description": "Deskripsi item baru",
+  "price": 50000.00,
+  "quantity": 10,
+  "categoryId": 1,
+  "supplierId": 1,
+  "createdBy": 1
+}
+
+# ### Get item summary (total, average, etc.)
+# GET http://localhost:3001/api/items/summary
+# Accept: application/json
+
+# ### Get items below a certain stock threshold
+# GET http://localhost:3001/api/items/threshold/5
+# Accept: application/json

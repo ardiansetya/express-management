@@ -1,0 +1,13 @@
+### Get all items
+GET http://localhost:3001/api/admin
+Accept: application/json
+
+### Create a new item
+POST http://localhost:3001/api/admin
+Content-Type: application/json
+
+{
+  "username": "ardian",
+  "email": "ardiansetya@gmail.com",
+  "password": "Ardiansetya1"
+}
